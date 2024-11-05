@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const numbersDiv = root.querySelector('.numbers');
     const operatorsDiv = root.querySelector('.operators');
+    const displayDiv = root.querySelector('.display');
+    const clearButton = root.querySelector('#clear');
+    const equalButton = root.querySelector('#equal');
+    let equation = [];
 
     const divide = () => console.log('divide')
     const multiplication = () => console.log('multiplication')
@@ -26,15 +30,16 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     const operators = [
-        { label: '÷', callback: divide },
-        { label: 'x', callback: multiplication },
-        { label: '-', callback: substract },
-        { label: '+', callback: add },
+        { label: '÷', value: 'divide' },
+        { label: 'x', value: 'multiplication' },
+        { label: '-', value: 'subtract' },
+        { label: '+', value: 'add' },
     ]
 
     function populateNumbersDiv(){
         numbers.forEach(({label, value}) => {
             const button = document.createElement("button");
+            button.className = 'number'
             button.innerText = label;
             button.dataset.value = value;
             numbersDiv.appendChild(button)
@@ -42,14 +47,69 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function populateOperatorsDiv(){
-        operators.forEach(({label, callback}) => {
+        operators.forEach(({label, value}) => {
             const button = document.createElement("button");
+            button.className = 'operator'
             button.innerText = label;
-            button.addEventListener('click', callback)
+            button.dataset.value = value
             operatorsDiv.appendChild(button)
         })
     }
 
+    function addToEquation(value){
+        const symbols = {
+            divide: "/",
+            multiplication: "*",
+            add: "+",
+            subtract: "-"
+        };
+
+        equation.push(value);
+
+        let expression = equation.join('');
+
+        // Replace words with corresponding operators
+        Object.keys(symbols).forEach(word => {
+            const regex = new RegExp(word, 'g'); // Create a global regex for each word
+            expression = expression.replace(regex, symbols[word]);
+        });
+
+        displayDiv.innerText = expression;
+    }
+
+    function handleNumberAndOperatorsButtonClick(){
+        const buttons = Array.from(root.querySelectorAll('button'));
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                addToEquation(button.dataset.value)
+            })
+        })
+    }
+
+    function clearEquation(){
+        equation = [];
+        displayDiv.innerText = "";
+    }
+
+    function solveEquation(){
+        try{
+            const result = eval(displayDiv.innerText)
+            displayDiv.innerText = result
+        } catch(e){
+            equation = [];
+            displayDiv.innerText = 'error';
+
+            setTimeout(() => {
+                displayDiv.innerText = '';
+            }, 1000);
+        }
+    }
+
     populateNumbersDiv();
     populateOperatorsDiv();
+    handleNumberAndOperatorsButtonClick();
+
+    clearButton.addEventListener('click', clearEquation);
+    equalButton.addEventListener('click', solveEquation);
 })

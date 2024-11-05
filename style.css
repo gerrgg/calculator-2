@@ -1,5 +1,9 @@
-main{
+:root{
+  --font-calculator: "Orbitron", sans-serif;
+}
 
+main *{
+  font-family: var(--font-calculator);
 }
 
 main .wrap{
@@ -38,7 +42,9 @@ main .wrap{
     color: black;
     width: 100%;
     box-sizing: border-box;
+    white-space: nowrap;
     font-size: 2rem;
+    height: 69px;
 }
 
 .calculator .numbers{
@@ -52,6 +58,10 @@ main .wrap{
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+body{
+  background: #000;
 }
 
  /* Base Button Style */
@@ -85,4 +95,25 @@ main .wrap{
     background-color: #ccc;        /* Light grey background */
     color: #666;                   /* Dark grey text */
     cursor: not-allowed;           /* Not-allowed cursor */
+  }
+
+  .calculator .bottom-buttons{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .calculator .bottom-buttons #clear{
+    background: red;
+  }
+
+  .calculator .bottom-buttons #equal{
+    background: green;
+  }
+
+  .top{
+    color: white;
+    text-align: center;
   }
